@@ -16,7 +16,7 @@
     </div>
     <form id="transaction-form">
       <input type="text" id="description" placeholder="Описание" required />
-      <input type="number" id="amount" placeholder="Сумма" required />
+      <input type="number" id="amount" placeholder="Сумма" step="0.01" inputmode="decimal" required />
       <select id="type">
         <option value="income">Доход</option>
         <option value="expense">Расход</option>
