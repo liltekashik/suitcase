@@ -2,11 +2,9 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Suitcase</title>
-  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="style.css" />
-  <meta name="theme-color" content="#008080" />
 </head>
 <body>
   <h1>Suitcase</h1>
@@ -31,12 +29,11 @@
     </section>
   </main>
 
-  <!-- Модальное окно -->
   <div id="modal" class="modal hidden">
     <div class="modal-content">
       <form id="entry-form">
         <input type="text" id="description" placeholder="Описание" required />
-        <input type="number" id="amount" placeholder="Сумма" step="0.01" inputmode="decimal" required />
+        <input type="number" id="amount" placeholder="Сумма" step="0.01" inputmode="decimal" />
         <button type="submit">Добавить</button>
         <button type="button" onclick="closeForm()">Отмена</button>
       </form>
@@ -44,10 +41,5 @@
   </div>
 
   <script src="script.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
-    }
-  </script>
 </body>
 </html>
