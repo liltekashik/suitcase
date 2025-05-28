@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
@@ -9,21 +9,38 @@
   <meta name="theme-color" content="#008080" />
 </head>
 <body>
-  <div class="app">
-    <h1>Suitcase</h1>
-    <div class="balance">
-      <p>Баланс: <span id="balance">0 ₽</span></p>
+  <h1>Suitcase</h1>
+
+  <main>
+    <section class="block" id="income-block">
+      <h2>Доходы</h2>
+      <ul id="income-list"></ul>
+      <button class="add-btn" onclick="openForm('income')">+</button>
+    </section>
+
+    <section class="block" id="wallet-block">
+      <h2>Кошельки</h2>
+      <ul id="wallet-list"></ul>
+      <button class="add-btn" onclick="openForm('wallet')">+</button>
+    </section>
+
+    <section class="block" id="expense-block">
+      <h2>Расходы</h2>
+      <ul id="expense-list"></ul>
+      <button class="add-btn" onclick="openForm('expense')">+</button>
+    </section>
+  </main>
+
+  <!-- Модальное окно -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <form id="entry-form">
+        <input type="text" id="description" placeholder="Описание" required />
+        <input type="number" id="amount" placeholder="Сумма" step="0.01" inputmode="decimal" required />
+        <button type="submit">Добавить</button>
+        <button type="button" onclick="closeForm()">Отмена</button>
+      </form>
     </div>
-    <form id="transaction-form">
-      <input type="text" id="description" placeholder="Описание" required />
-      <input type="number" id="amount" placeholder="Сумма" step="0.01" inputmode="decimal" required />
-      <select id="type">
-        <option value="income">Доход</option>
-        <option value="expense">Расход</option>
-      </select>
-      <button type="submit">Добавить</button>
-    </form>
-    <ul id="transaction-list"></ul>
   </div>
 
   <script src="script.js"></script>
