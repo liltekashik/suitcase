@@ -40,7 +40,7 @@ function renderTransactions() {
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   const description = descInput.value.trim();
-  const amount = parseFloat(amountInput.value);
+  const amount = parseFloat(amountInput.value.replace(',', '.'));
   const type = typeInput.value;
 
   if (!description || isNaN(amount)) return;
