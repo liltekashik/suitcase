@@ -1,57 +1,110 @@
-﻿const balanceEl = document.getElementById('balance');
-const form = document.getElementById('transaction-form');
-const list = document.getElementById('transaction-list');
-const descInput = document.getElementById('description');
+// Элементы DOM
+const incomeList = document.getElementById('income-list');
+const walletList = document.getElementById('wallet-list');
+const expenseList = document.getElementById('expense-list');
+
+const modal = document.getElementById('modal');
+const entryForm = document.getElementById('entry-form');
+const descriptionInput = document.getElementById('description');
 const amountInput = document.getElementById('amount');
-const typeInput = document.getElementById('type');
 
-let transactions = JSON.parse(localStorage.getItem('suitcase-transactions')) || [];
+let currentType = null; // Тип текущего добавления: 'income', 'wallet', 'expense'
 
-function updateLocalStorage() {
-  localStorage.setItem('suitcase-transactions', JSON.stringify(transactions));
+// Загрузка данных из localStorage или пустые массивы
+let data = JSON.parse(localStorage.getItem('suitcase-data')) || {
+  income: [],
+  wallet: [],
+  expense: []
+};
+
+function saveData() {
+  localStorage.setItem('suitcase-data', JSON.stringify(data));
 }
 
-function updateBalance() {
-  const total = transactions.reduce((acc, item) => {
-    return item.type === 'income' ? acc + item.amount : acc - item.amount;
-  }, 0);
-  balanceEl.textContent = `${total.toFixed(2)} BYN`;
-}
+function render() {
+  // Очистка списков
+  incomeList.innerHTML = '';
+  walletList.innerHTML = '';
+  expenseList.innerHTML = '';
 
-function renderTransactions() {
-  list.innerHTML = '';
-  transactions.forEach((item, index) => {
+  // Рендер доходов
+  data.income.forEach((item, index) => {
     const li = document.createElement('li');
-    li.classList.add(item.type);
-    li.innerHTML = `
-      <span>${item.description}</span>
-      <span>${item.amount.toFixed(2)} BYN</span>
-    `;
-    li.addEventListener('click', () => {
-      transactions.splice(index, 1);
-      updateLocalStorage();
-      renderTransactions();
-      updateBalance();
-    });
-    list.appendChild(li);
+    li.textContent = `${item.description}: ${item.amount.toFixed(2)} BYN`;
+    li.onclick = () => {
+      data.income.splice(index, 1);
+      saveData();
+      render();
+    };
+    incomeList.appendChild(li);
+  });
+
+  // Рендер кошельков
+  data.wallet.forEach((item, index) => {
+    const li = document.createElement('li');
+    li.textContent = item.description;
+    li.onclick = () => {
+      data.wallet.splice(index, 1);
+      saveData();
+      render();
+    };
+    walletList.appendChild(li);
+  });
+
+  // Рендер расходов
+  data.expense.forEach((item, index) => {
+    const li = document.createElement('li');
+    li.textContent = `${item.description}: ${item.amount.toFixed(2)} BYN`;
+    li.onclick = () => {
+      data.expense.splice(index, 1);
+      saveData();
+      render();
+    };
+    expenseList.appendChild(li);
   });
 }
 
-form.addEventListener('submit', (e) => {
+// Функция открытия формы с указанием типа
+function openForm(type) {
+  currentType = type;
+  descriptionInput.value = '';
+  amountInput.value = '';
+  
+  // Для кошельков сумма не нужна — скрываем поле суммы
+  if (type === 'wallet') {
+    amountInput.style.display = 'none';
+  } else {
+    amountInput.style.display = 'block';
+  }
+
+  modal.classList.remove('hidden');
+  descriptionInput.focus();
+}
+
+// Закрыть форму
+function closeForm() {
+  modal.classList.add('hidden');
+}
+
+// Обработка отправки формы
+entryForm.onsubmit = function (e) {
   e.preventDefault();
-  const description = descInput.value.trim();
-  const amount = parseFloat(amountInput.value.replace(',', '.'));
-  const type = typeInput.value;
+  const description = descriptionInput.value.trim();
+  let amount = parseFloat(amountInput.value.replace(',', '.'));
+  
+  if (!description) return alert('Введите описание');
+  if (currentType !== 'wallet' && (isNaN(amount) || amount <= 0)) return alert('Введите корректную сумму');
 
-  if (!description || isNaN(amount)) return;
+  if (currentType === 'wallet') {
+    data.wallet.push({ description });
+  } else {
+    data[currentType].push({ description, amount });
+  }
 
-  transactions.push({ description, amount, type });
-  updateLocalStorage();
-  renderTransactions();
-  updateBalance();
-  form.reset();
-});
+  saveData();
+  render();
+  closeForm();
+};
 
-// init
-renderTransactions();
-updateBalance();
+// Инициализация
+render();
