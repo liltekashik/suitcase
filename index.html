@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suitcase</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <meta name="theme-color" content="#008080" />
+</head>
+<body>
+  <div class="app">
+    <h1>Suitcase</h1>
+    <div class="balance">
+      <p>Баланс: <span id="balance">0 ₽</span></p>
+    </div>
+    <form id="transaction-form">
+      <input type="text" id="description" placeholder="Описание" required />
+      <input type="number" id="amount" placeholder="Сумма" required />
+      <select id="type">
+        <option value="income">Доход</option>
+        <option value="expense">Расход</option>
+      </select>
+      <button type="submit">Добавить</button>
+    </form>
+    <ul id="transaction-list"></ul>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
+</body>
+</html>
